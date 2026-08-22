@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FlexCode — Custom design, shipped</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4F5F8;
+    --panel: #FFFFFF;
+    --ink: #12141C;
+    --ink-soft: #565A68;
+    --line: #E2E4EA;
+    --cobalt: #2F4BFF;
+    --violet: #6E56CF;
+    --teal: #00B39B;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { text-decoration: none; color: inherit; }
+  img, svg { display: block; }
+  ul { list-style: none; margin: 0; padding: 0; }
+
+  .display { font-family: 'Space Grotesk', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 1152px; margin: 0 auto; padding: 0 20px; }
+  .grad-text {
+    background: linear-gradient(95deg, var(--cobalt), var(--violet));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  :focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+
+  /* buttons */
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500;
+    padding: 12px 20px; border-radius: 8px; cursor: pointer; border: none; font-family: inherit; }
+  .btn-sm { padding: 10px 16px; }
+  .btn-primary { background: var(--ink); color: var(--paper); transition: background .15s ease; }
+  .btn-primary:hover { background: var(--cobalt); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); transition: border-color .15s ease, background .15s ease; }
+  .btn-ghost:hover { border-color: var(--ink); background: var(--panel); }
+  .btn-light { background: #fff; color: var(--ink); }
+
+  /* nav */
+  header.nav {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(244,245,248,0.85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo .wordmark { font-size: 19px; letter-spacing: -0.01em; }
+  .logo .wordmark b { font-weight: 700; }
+  .logo .wordmark span { font-weight: 400; opacity: 0.6; }
+  .draw-path { stroke-dasharray: 260; stroke-dashoffset: 260; animation: draw 1.3s ease forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-soft); }
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+  .mobile-menu { display: none; flex-direction: column; gap: 16px; padding: 16px 20px 20px; border-top: 1px solid var(--line); background: var(--paper); }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 15px; font-weight: 500; }
+  .mobile-menu .mobile-actions { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+  .mobile-menu .btn { width: 100%; justify-content: center; }
+
+  /* hero */
+  .hero { padding: 72px 0 64px; display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
+  .eyebrow { display: inline-block; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 6px; background: #EEF1FF; color: var(--cobalt); }
+  .hero h1 { font-size: 38px; line-height: 1.08; font-weight: 600; letter-spacing: -0.01em; margin: 20px 0 0; }
+  .hero p.lede { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 420px; margin: 20px 0 0; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+  .terminal { border-radius: 12px; overflow: hidden; background: var(--ink); }
+  .terminal-bar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; border-bottom: 1px solid #262A38; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .terminal-bar .label { font-size: 11px; color: #7C8194; margin-left: 12px; }
+  .terminal-body { height: 256px; overflow: hidden; position: relative; padding: 16px 20px; }
+  .ticker-track { animation: scroll 16s linear infinite; }
+  @keyframes scroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+  .ticker-track div { font-size: 13px; color: #B8BCC9; padding: 6px 0; display: flex; align-items: center; gap: 8px; }
+  .ticker-track div span { color: var(--teal); }
+  .terminal-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 48px; background: linear-gradient(transparent, var(--ink)); }
+  @media (prefers-reduced-motion: reduce) { .ticker-track, .draw-path { animation: none; } .draw-path { stroke-dashoffset: 0; } }
+
+  /* sections */
+  section.block { padding: 64px 0; border-top: 1px solid var(--line); }
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+  .section-head h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .section-head .tag { font-size: 12px; color: var(--ink-soft); }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+  .service-icon { width: 22px; height: 22px; color: var(--cobalt); }
+  .card h3 { font-size: 17px; font-weight: 600; margin: 16px 0 0; }
+  .card p { font-size: 14px; line-height: 1.6; color: var(--ink-soft); margin: 8px 0 0; }
+
+  .steps { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  .step .num { font-size: 13px; color: var(--violet); font-family: 'IBM Plex Mono', monospace; }
+  .step h3 { font-size: 16px; font-weight: 600; margin: 8px 0 0; }
+  .step p { font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); margin: 8px 0 0; }
+
+  .work-card .top { display: flex; align-items: center; justify-content: space-between; }
+  .pill { font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; padding: 4px 8px; border-radius: 6px; background: #F1EDFB; color: var(--violet); }
+  .work-card h3 { font-size: 18px; font-weight: 600; margin: 16px 0 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .tags span { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: var(--paper); color: var(--ink-soft); border: 1px solid var(--line); }
+
+  .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  .price-card { border-radius: 12px; padding: 24px; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); }
+  .price-card.featured { background: var(--ink); border: none; color: #fff; }
+  .price-card h3 { font-size: 17px; font-weight: 600; margin: 0; }
+  .price-card .desc { font-size: 13px; margin-top: 4px; color: var(--ink-soft); }
+  .price-card.featured .desc { color: #B8BCC9; }
+  .price-card .amount { font-size: 30px; font-weight: 600; margin-top: 16px; }
+  .price-card ul { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; flex: 1; }
+  .price-card li { display: flex; align-items: flex-start; gap: 8px; font-size: 13.5px; color: var(--ink-soft); }
+  .price-card.featured li { color: #DADCE3; }
+  .price-card li svg { flex-shrink: 0; margin-top: 2px; color: var(--cobalt); }
+  .price-card.featured li svg { color: var(--teal); }
+  .price-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 24px; }
+
+  .cta-band { border-radius: 16px; padding: 56px 32px; text-align: center; background: var(--ink); }
+  .cta-band h2 { font-size: 26px; font-weight: 600; color: #fff; margin: 0; letter-spacing: -0.01em; }
+  .cta-band p { font-size: 15px; color: #B8BCC9; max-width: 420px; margin: 12px auto 0; }
+  .cta-band .btn { margin-top: 28px; }
+
+  footer { border-top: 1px solid var(--line); background: var(--ink); }
+  .footer-top { padding: 40px 0; display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 20px; font-size: 13.5px; color: #9BA0B0; }
+  .footer-mail { font-size: 12.5px; color: #6E7383; }
+  .footer-bottom { border-top: 1px solid #262A38; padding: 16px 20px; }
+  .footer-bottom p { font-size: 11.5px; color: #6E7383; margin: 0; }
+
+  @media (min-width: 720px) {
+    .hero h1 { font-size: 52px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: repeat(4, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-top { flex-direction: row; align-items: center; justify-content: space-between; }
+  }
+  @media (min-width: 860px) {
+    .hero { grid-template-columns: 1fr 1fr; padding: 96px 0 72px; }
+  }
+  @media (max-width: 719px) {
+    .nav-links, .nav-actions { display: none; }
+    .nav-toggle { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo" aria-label="FlexCode home">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="grad1" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#2F4BFF" />
+            <stop offset="1" stop-color="#6E56CF" />
+          </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="#12141C" />
+        <path d="M20 9 C14 9 14 14 14 16 C14 18 10.5 18.5 10.5 20 C10.5 21.5 14 22 14 24 C14 26 14 31 20 31"
+          stroke="url(#grad1)" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" fill="none" class="draw-path" />
+      </svg>
+      <span class="wordmark display"><b>flex</b><span>code</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm">Sign in</button>
+      <button class="btn btn-primary btn-sm">Start a project
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="#pricing">Pricing</a>
+    <div class="mobile-actions">
+      <button class="btn btn-ghost">Sign in</button>
+      <button class="btn btn-primary">Start a project</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div>
+      <span class="eyebrow mono">Custom-built, not templated</span>
+      <h1 class="display">Tell us the page you need.<br>We design it, <span class="grad-text">you approve it</span>, it ships.</h1>
+      <p class="lede">FlexCode builds custom landing pages, portfolios, dashboards and storefronts — designed around your brief, not a theme you have to bend to fit.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary">Start a project
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <a href="#work" class="btn btn-ghost">See recent work</a>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="dot" style="background:#E2554F"></span>
+        <span class="dot" style="background:#E8B23D"></span>
+        <span class="dot" style="background:#3FBF7F"></span>
+        <span class="label mono">request-feed.log</span>
+      </div>
+      <div class="terminal-body">
+        <div class="ticker-track mono" id="ticker"></div>
+        <div class="terminal-fade"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="wrap block">
+    <div class="section-head">
+      <h2 class="display">What we build</h2>
+      <span class="tag mono">04 core services</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="1"/><rect x="3" y="14" width="18" height="7" rx="1"/></svg>
+        <h3 class="display">Landing pages</h3>
+        <p>A focused single page built to explain one offer and move people to act.</p>
+      </div>
+      <div class="card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+        <h3 class="display">Portfolio &amp; personal sites</h3>
+        <p>A site that shows your work the way you'd present it in person.</p>
+      </div>
+      <div class="card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        <h3 class="display">Admin dashboards &amp; tools</h3>
+        <p>Internal tools built around how your team actually works, not a generic template.</p>
+      </div>
+      <div class="card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <h3 class="display">Storefronts &amp; booking</h3>
+        <p>Pages that take orders, bookings or signups without a bolted-on checkout.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block">
+    <div class="section-head"><h2 class="display">How it works</h2></div>
+    <div class="steps">
+      <div class="step">
+        <span class="num">01</span>
+        <h3 class="display">Brief</h3>
+        <p>Tell us what the page needs to do, who it's for, and any references you like.</p>
+      </div>
+      <div class="step">
+        <span class="num">02</span>
+        <h3 class="display">Design</h3>
+        <p>We draft a custom layout and send you a preview link to review.</p>
+      </div>
+      <div class="step">
+        <span class="num">03</span>
+        <h3 class="display">Refine</h3>
+        <p>You leave notes directly on the request, we adjust until it's right.</p>
+      </div>
+      <div class="step">
+        <span class="num">04</span>
+        <h3 class="display">Launch</h3>
+        <p>Final files and handoff, and it goes live.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="wrap block">
+    <div class="section-head">
+      <h2 class="display">Recent work</h2>
+      <span class="tag mono">4 projects shipped</span>
+    </div>
+    <div class="grid-2" id="workGrid"></div>
+  </section>
+
+  <section id="pricing" class="wrap block">
+    <div class="section-head"><h2 class="display">Pricing</h2></div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3 class="display">Starter</h3>
+        <p class="desc">One custom page, built and delivered.</p>
+        <div class="amount display">$350</div>
+        <ul>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 page design</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>2 rounds of revisions</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Mobile-responsive build</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>5-day turnaround</li>
+        </ul>
+        <button class="btn btn-ghost" style="margin-top:24px; justify-content:center;">Start a project</button>
+      </div>
+      <div class="price-card featured">
+        <h3 class="display">Professional</h3>
+        <p class="desc">A multi-page site with structure.</p>
+        <div class="amount display">$900</div>
+        <ul>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 5 pages</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited revisions in review</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Custom component design</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>10-day turnaround</li>
+        </ul>
+        <button class="btn btn-light" style="margin-top:24px; justify-content:center;">Start a project</button>
+      </div>
+      <div class="price-card">
+        <h3 class="display">Custom</h3>
+        <p class="desc">Dashboards, storefronts, ongoing work.</p>
+        <div class="amount display">Let's talk</div>
+        <ul>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Scoped to your brief</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Admin tools &amp; integrations</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Ongoing support option</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Timeline set together</li>
+        </ul>
+        <button class="btn btn-ghost" style="margin-top:24px; justify-content:center;">Start a project</button>
+      </div>
+    </div>
+    <p class="price-note">Placeholder pricing — edit these tiers to match what you actually want to charge.</p>
+  </section>
+
+  <section class="wrap block" style="border-top:none;">
+    <div class="cta-band">
+      <h2 class="display">Have a page in mind?</h2>
+      <p>Create an account, tell us the brief, and track it through design to launch.</p>
+      <button class="btn btn-light">Start a project
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-top">
+    <a href="#" class="logo" aria-label="FlexCode home">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="grad2" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#2F4BFF" />
+            <stop offset="1" stop-color="#6E56CF" />
+          </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="#1B1E29" />
+        <path d="M20 9 C14 9 14 14 14 16 C14 18 10.5 18.5 10.5 20 C10.5 21.5 14 22 14 24 C14 26 14 31 20 31"
+          stroke="url(#grad2)" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+      </svg>
+      <span class="wordmark display" style="color:#F4F5F8;"><b>flex</b><span>code</span></span>
+    </a>
+    <ul class="footer-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#">Sign in</a></li>
+    </ul>
+    <span class="footer-mail mono">hello@flexcode.dev</span>
+  </div>
+  <div class="footer-bottom">
+    <p class="mono">&copy; 2026 FlexCode. Custom design, shipped.</p>
+  </div>
+</footer>
+
+<script>
+  var navToggle = document.getElementById('navToggle');
+  var mobileMenu = document.getElementById('mobileMenu');
+  navToggle.addEventListener('click', function () {
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { mobileMenu.classList.remove('open'); });
+  });
+
+  var feed = [
+    'landing page — queued',
+    'portfolio site — in review',
+    'admin dashboard — delivered',
+    'storefront — in progress'
+  ];
+  var ticker = document.getElementById('ticker');
+  feed.concat(feed).forEach(function (line) {
+    var row = document.createElement('div');
+    row.innerHTML = '<span>&gt;</span> ' + line;
+    ticker.appendChild(row);
+  });
+
+  var projects = [
+    { title: 'Northbound Studio', category: 'Portfolio site', description: 'A quiet, image-led portfolio for an architecture studio, built around their project photography.', tags: ['Portfolio', 'Motion'] },
+    { title: 'Ledgerly', category: 'Admin dashboard', description: 'An internal billing dashboard with real-time invoice tracking for a five-person finance team.', tags: ['Dashboard', 'SaaS'] },
+    { title: 'Craft & Cask', category: 'Storefront', description: 'A booking and pre-order page for a small-batch distillery, built around tasting-room slots.', tags: ['E-commerce', 'Booking'] },
+    { title: 'Runway Analytics', category: 'Landing page', description: 'A single-page product launch site for a B2B analytics tool, built to explain one plan clearly.', tags: ['Landing page', 'B2B'] }
+  ];
+  var grid = document.getElementById('workGrid');
+  projects.forEach(function (p) {
+    var card = document.createElement('div');
+    card.className = 'card work-card';
+    var tagsHtml = p.tags.map(function (t) { return '<span>' + t + '</span>'; }).join('');
+    card.innerHTML =
+      '<div class="top">' +
+        '<span class="pill mono">' + p.category + '</span>' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA0AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>' +
+      '</div>' +
+      '<h3 class="display">' + p.title + '</h3>' +
+      '<p>' + p.description + '</p>' +
+      '<div class="tags mono">' + tagsHtml + '</div>';
+    grid.appendChild(card);
+  });
+</script>
+
+</body>
+</html>
