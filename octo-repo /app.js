@@ -1091,3 +1091,77 @@ onClick={() => { setAuthMode("login"); setAuthError(""); }}
                           <span className="pill pill-pending"><Clock3 size={13} /> Pending</span>
                         )}
                       </div>
+<div className="sug-meta">Sent {formatDate(s.createdAt)}</div>
+                      {s.deliveryCode && (
+                        <div className="code-box">
+                          <div className="code-box-label"><CheckCircle2 size={12} /> Your code</div>
+                          <code className="code-value">{s.deliveryCode}</code>
+                          <button className="text-link-btn" type="button" onClick={() => copyCode(s.id, s.deliveryCode)}>
+                            {copiedId === s.id ? "Copied!" : "Copy"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="dash">
+          <div className="dash-header">
+            <div className="wordmark">
+              <span className="wordmark-dot" />
+              Maoni<span className="admin-tag">ADMIN</span>
+            </div>
+            <div className="dash-header-right">
+              <button className="icon-btn" onClick={() => setShowSettings(true)} title="Notification settings">
+                <Settings size={16} />
+              </button>
+              <div className="badge-wrap">
+                <div className="icon-btn"><Bell size={16} /></div>
+                {pendingCount > 0 && <span className="badge-dot">{pendingCount}</span>}
+              </div>
+              <span className="who">Signed in as <strong>{currentUser.username}</strong></span>
+              <button className="logout-btn" onClick={handleLogout}>
+                <LogOut size={14} /> Log out
+              </button>
+            </div>
+          </div>
+ 
+          <div className="dash-body">
+            <div className="list-heading"><h2>All client suggestions</h2>
+              <span className="count-tag">{pendingCount} pending · {submissions.length} total</span>
+            </div>
+ 
+            {adminFlash && <div className="flash-msg" style={{ marginBottom: 16 }}>{adminFlash}</div>}
+ 
+            <div className="filter-row">
+              <button className={`filter-chip ${adminFilter === "all" ? "active" : ""}`} onClick={() => setAdminFilter("all")}>All</button>
+              <button className={`filter-chip ${adminFilter === "pending" ? "active" : ""}`} onClick={() => setAdminFilter("pending")}>Pending</button>
+              <button className={`filter-chip ${adminFilter === "completed" ? "active" : ""}`} onClick={() => setAdminFilter("completed")}>Completed</button>
+            </div>
+ 
+            {subsLoading ? (
+              <div className="footnote">Loading…</div>
+            ) : visibleAdminItems.length === 0 ? (
+              <div className="empty-state"><div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                  <Inbox size={16} />
+                  <span style={{ color: "var(--text)" }}>Nothing here yet</span>
+                </div>
+                No suggestions match this filter right now.
+              </div>
+            ) : (
+              visibleAdminItems.map((s) => (
+                <div className="sug-row" key={s.id}>
+                  <div className="sug-row-top">
+                    <div>
+                      <div className="sug-title">{s.title}</div>
+                      <div className="sug-message">{s.message}</div>
+                    </div>
+                    <button
+                      className={`status-btn ${s.status === "completed" ? "is-completed" : "is-pending"}`}
+                      onClick={() => toggleStatus(s)}
+                    >
+                      {s.status === "completed" ? <CheckCircle2 size={14} /> : <Clock3 size={14} />}
