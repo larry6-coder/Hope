@@ -1164,4 +1164,69 @@ onClick={() => { setAuthMode("login"); setAuthError(""); }}
                       className={`status-btn ${s.status === "completed" ? "is-completed" : "is-pending"}`}
                       onClick={() => toggleStatus(s)}
                     >
-                      {s.status === "completed" ? <CheckCircle2 size={14} /> : <Clock3 size={14} />}
+                      {s.status === "completed" ? <CheckCircle2 size={14} /> : <Clock3 size={14} />}{s.status === "completed" ? "Completed" : "Mark complete"}
+                    </button>
+                  </div>
+                  <div className="sug-meta">
+                    <span className="sug-client">{s.company || s.username}</span>
+                    <span>· @{s.username}</span>
+                    <span>· Sent {formatDate(s.createdAt)}</span>
+                  </div>
+ 
+                  {s.deliveryCode && codeRowOpenId !== s.id && (
+                    <div className="code-box">
+                      <div className="code-box-label"><Send size={12} /> Code sent to client</div>
+                      <code className="code-value">{s.deliveryCode}</code>
+                      <button className="text-link-btn" type="button" onClick={() => openCodeRow(s)}>
+                        Update
+                      </button>
+                    </div>
+                  )})}
+ 
+                  {codeRowOpenId === s.id ? (
+                    <form
+                      className="code-form"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSendCode(s);
+                      }}
+                    >
+                      <input
+                        className="field-input"
+                        style={{ paddingLeft: 13 }}
+                        placeholder="Paste or type the code to send"
+                        value={codeInputValue}
+                        onChange={(e) => setCodeInputValue(e.target.value)}
+                        autoFocus
+                      />
+                      <div className="code-form-actions">
+                        <button
+                          className="btn-primary"
+                          type="submit"
+                          disabled={codeSending}
+                          style={{ marginTop: 0, width: "auto", padding: "10px 18px" }}
+>
+                          {codeSending ? "Sending…" : "Send code to client"}
+                        </button>
+                        <button
+                          type="button"
+                          className="logout-btn"
+                          onClick={() => {
+                            setCodeRowOpenId(null);
+                            setCodeInputValue("");
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    !s.deliveryCode && (
+                      <button className="text-link-btn code-trigger" type="button" onClick={() => openCodeRow(s)}>
+                        <Send size={12} /> Send code to client
+                      </button>
+                    )
+                  )}
+                </div>
+              ))
+ 
