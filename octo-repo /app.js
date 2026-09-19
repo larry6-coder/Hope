@@ -1229,4 +1229,80 @@ onClick={() => { setAuthMode("login"); setAuthError(""); }}
                   )}
                 </div>
               ))
+ )}
+          </div>
  
+          {showSettings && (
+            <div className="modal-overlay" onClick={() => setShowSettings(false)}>
+              <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-head">
+                  <h2 style={{ fontSize: 18, fontWeight: 600 }}>Email notifications</h2>
+                  <button className="icon-btn" onClick={() => setShowSettings(false)}>
+                    <X size={16} />
+                  </button>
+                </div>
+                <p className="panel-sub" style={{ marginBottom: 18 }}>
+                  Powered by EmailJS, a service that can send email straight from the browser —
+                  no server needed. Create a free account at emailjs.com, connect your inbox, and
+                  make one email template with the variables <code>to_email</code>,{" "}
+                  <code>to_name</code>, <code>subject</code>, <code>heading</code> and{" "}
+                  <code>message_body</code>. Then paste the three IDs it gives you below.
+                </p><form onSubmit={handleSaveSettings}>
+                  <div className="field-group">
+                    <label className="field-label">Your email (receives new-suggestion alerts)</label>
+                    <input
+                      className="field-input"
+                      style={{ paddingLeft: 13 }}
+                      type="email"
+                      placeholder="you@example.com"
+                      value={settingsForm.notifyEmail}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, notifyEmail: e.target.value })}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label className="field-label">EmailJS Service ID</label>
+                    <input
+                      className="field-input"
+                      style={{ paddingLeft: 13 }}
+                      placeholder="service_xxxxxxx"
+                      value={settingsForm.serviceId}onChange={(e) => setSettingsForm({ ...settingsForm, serviceId: e.target.value })}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label className="field-label">EmailJS Template ID</label>
+                    <input
+                      className="field-input"
+                      style={{ paddingLeft: 13 }}
+                      placeholder="template_xxxxxxx"
+                      value={settingsForm.templateId}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, templateId: e.target.value })}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label className="field-label">EmailJS Public Key</label>
+                    <input
+                      className="field-input"
+                      style={{ paddingLeft: 13 }}
+placeholder="public key from Account > API Keys"
+                      value={settingsForm.publicKey}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, publicKey: e.target.value })}
+                    />
+                  </div>
+                  <button className="btn-primary" type="submit">
+                    Save settings
+                  </button>
+                  {settingsSaved && (
+                    <div className="flash-msg" style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                      <CheckCircle size={14} /> Settings saved.
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+                        }const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<MaoniApp />);
